@@ -2,14 +2,15 @@ var MongoClient = require('mongodb').MongoClient;
 var datetime = require('node-datetime');
 var express = require('express');
 var app = express();
-var url = "mongodb://localhost";
 
+var url = "mongodb://localhost";
+var dbname = 'nodemongo';
 app.route('/create/:id/:name').get(function (req,res) {
     MongoClient.connect(url,{useNewUrlParser: true},function (err,client) {
         if (err) {
             console.log(err);
         }
-        var db = client.db('nodemongo');
+        var db = client.db(dbname);
         var newval = { Employeeid:Number(req.params.id), EmployeeName:req.params.name};
         db.collection('Employee').insertOne(newval, function (ferr,result) {
             if (result){
@@ -27,7 +28,7 @@ app.route('/read/:id').get(function (req,res) {
         if (err) {
             console.log(err);
         }
-        var db = client.db('nodemongo');
+        var db = client.db(dbname);
         var querry = {"Employeeid":Number(req.params.id)};
         db.collection('Employee').findOne(querry,function (ferr,result)  {
             if (result){
@@ -45,7 +46,7 @@ app.route('/update/:id/:name').get(function (req,res) {
         if (err) {
             console.log(err);
         }
-        var db = client.db('nodemongo');
+        var db = client.db(dbname);
         var querry = {"Employeeid":Number(req.params.id)};
         var newval = { $set:{EmployeeName:req.params.name}};
         db.collection('Employee').updateOne(querry,newval,function (ferr,result)  {
@@ -59,7 +60,7 @@ app.route('/delete/:id').get(function (req,res) {
         if (err) {
             console.log(err);
         }
-        var db = client.db('nodemongo');
+        var db = client.db(dbname);
         var querry = {"Employeeid":Number(req.params.id)};
         db.collection('Employee').deleteOne(querry,function (ferr,result)  {
             if (result){
